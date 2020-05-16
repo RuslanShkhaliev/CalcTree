@@ -1,0 +1,138 @@
+
+@keyframes lazyAppear {
+  100% {
+    max-width: 56px
+  }
+}
+//
+//.reverse-tools-enter-active,
+//.reverse-tools-leave-active {
+//  transition: .1s ease;
+//
+//}
+//.reverse-tools-enter,
+//.reverse-tools-leave-to {
+//  opacity: 0;
+//}
+//.reverse-tools-enter-to,
+//.reverse-tools-leave {
+//  opacity: 1;
+//}
+
+.tooltip-appear-enter-active {
+  animation: appear-tooltip .3s ease-in;
+}
+.tooltip-appear-leave-active {
+  animation: appear-tooltip .2s reverse;
+}
+
+@keyframes appear-tooltip {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+
+//.tooltip-appear-leave-active {
+//  transition: .2s ease-out;
+//  transform-origin: 0 100%;
+//}
+//.tooltip-appear-enter,
+//.tooltip-appear-leave-to {
+//  opacity: 0;
+//  //transform: translateY(10px);
+//  transform: scale(0);
+//}
+//.tooltip-appear-enter-to,
+//.tooltip-appear-leave {
+//  opacity: 1;
+//  //transform: translateY(0);
+//  transform: scale(1);
+//}
+
+.appear-enter-active {
+  animation: appear .6s ease;
+  transform-origin: 50% 100%;
+}
+.appear-leave-active {
+  animation: appear .4s reverse;
+}
+@keyframes appear {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.card-appear-enter-active {
+  //transition: transform .4s ease-in, opacity .4s ease;
+}
+.card-appear-leave-active {
+  //transition: transform .2s ease-out, opacity .4s ease .2s;
+}
+
+//.card-appear-enter,
+//.card-appear-leave-to {
+//  opacity: 0;
+//  transform: translateY(10px);
+//}
+//.card-appear-enter-to,
+//.card-appear-leave {
+//  opacity: 1;
+//  transform: translateY(0);
+//}
+
+.remove-tooltip-enter-active {
+  animation: remove-tooltip .2s forwards ease;
+}
+.remove-tooltip-leave-active {
+  animation: remove-tooltip .2s ease reverse;
+}
+
+@keyframes remove-tooltip {
+  0% {
+    transform: scale(0) translateY(-50%);
+  }
+  50% {
+    transform: scale(1.1) translateY(-50%);
+  }
+  100% {
+    transform: scale(1) translateY(-50%);
+  }
+}
+
+.child-appear-enter-active {
+  animation: scale-appear .3s ease;
+}
+.child-appear-leave-active {
+  animation: scale-appear .3s ease reverse;
+}
+
+@keyframes scale-appear {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.btn-appear-enter-active {
+  animation: scale-appear .3s ease;
+}
+.btn-appear-leave-active {
+  animation: scale-active .3s ease-out reverse;
+}
