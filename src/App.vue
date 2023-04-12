@@ -1,6 +1,7 @@
 <template>
-  <div id="app">
-    <div class="wrapper">
+  <div>
+      app work !
+<!--    <div class="wrapper">
       <div class="inner-wrap">
         <user-card v-if="GET_ROOT_USER" :card="GET_ROOT_USER"></user-card>
       </div>
@@ -12,36 +13,36 @@
       </button>
       <modal-calculate v-if="MODAL_IS_OPEN && TABLE_DATA"/>
       <v-loader v-else-if="MODAL_IS_OPEN && !TABLE_DATA"></v-loader>
-    </div>
+    </div>-->
   </div>
 </template>
 
-<script>
-  import UserCard from "./components/UserCard";
-  import {mapGetters, mapActions} from "vuex";
-
-  export default {
-    name: 'App',
-    components: {
-      VLoader: () => import('./components/preloader/VLoader'),
-      UserCard,
-      ModalCalculate: () => import('./components/modal/ModalCalculate')
-    },
-    data() {
-      return {
-        modalIsOpen: false,
-      }
-    },
-    mounted() {
-      this.add_card();
-    },
-    computed: {
-      ...mapGetters(['GET_ROOT_USER', 'MODAL_IS_OPEN', 'TABLE_DATA']),
-    },
-    methods: {
-      ...mapActions(['add_card', 'openModal']),
-    }
-  }
+<script lang="ts" setup>
+  ////import UserCard from "./components/UserCard";
+  //import {mapGetters, mapActions} from "vuex";
+  //
+  //export default {
+  //  name: 'App',
+  //  components: {
+  //    //VLoader: () => import('./components/preloader/VLoader'),
+  //    //UserCard,
+  //    //ModalCalculate: () => import('./components/modal/ModalCalculate')
+  //  },
+  //  data() {
+  //    return {
+  //      modalIsOpen: false,
+  //    }
+  //  },
+  //  mounted() {
+  //    this.add_card();
+  //  },
+  //  computed: {
+  //    ...mapGetters(['GET_ROOT_USER', 'MODAL_IS_OPEN', 'TABLE_DATA']),
+  //  },
+  //  methods: {
+  //    ...mapActions(['add_card', 'openModal']),
+  //  }
+  //}
 </script>
 
 <style lang="scss">
