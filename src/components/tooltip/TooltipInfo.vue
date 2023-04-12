@@ -13,13 +13,11 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 
-  export default {
-    props: {
-      card: Object
-    },
-  }
+defineProps({
+    card: Object
+})
 </script>
 
 <style lang="scss">

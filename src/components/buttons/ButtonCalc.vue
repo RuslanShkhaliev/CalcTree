@@ -1,7 +1,8 @@
 <template>
   <div>
-    <button class="btn-calculate"
-            @click="$emit('click', $event)"
+    <button
+        class="btn-calculate"
+        @click="$emit('click', $event)"
     >
       <slot></slot>
     </button>

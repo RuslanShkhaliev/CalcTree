@@ -1,48 +1,32 @@
 <template>
   <div>
       app work !
-<!--    <div class="wrapper">
+    <div class="wrapper">
       <div class="inner-wrap">
-        <user-card v-if="GET_ROOT_USER" :card="GET_ROOT_USER"></user-card>
+            <UserCard v-if="getRootUser" :card="getRootUser"/>
       </div>
-      <button
-        class="btn-calculate"
-        v-if="!MODAL_IS_OPEN"
-        @click="openModal">
-        Рассчитать
-      </button>
-      <modal-calculate v-if="MODAL_IS_OPEN && TABLE_DATA"/>
-      <v-loader v-else-if="MODAL_IS_OPEN && !TABLE_DATA"></v-loader>
-    </div>-->
+<!--      <button-->
+<!--        class="btn-calculate"-->
+<!--        v-if="!MODAL_IS_OPEN"-->
+<!--        @click="openModal">-->
+<!--        Рассчитать-->
+<!--      </button>-->
+<!--      <modal-calculate v-if="MODAL_IS_OPEN && TABLE_DATA"/>
+      <v-loader v-else-if="MODAL_IS_OPEN && !TABLE_DATA"></v-loader>-->
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  ////import UserCard from "./components/UserCard";
-  //import {mapGetters, mapActions} from "vuex";
-  //
-  //export default {
-  //  name: 'App',
-  //  components: {
-  //    //VLoader: () => import('./components/preloader/VLoader'),
-  //    //UserCard,
-  //    //ModalCalculate: () => import('./components/modal/ModalCalculate')
-  //  },
-  //  data() {
-  //    return {
-  //      modalIsOpen: false,
-  //    }
-  //  },
-  //  mounted() {
-  //    this.add_card();
-  //  },
-  //  computed: {
-  //    ...mapGetters(['GET_ROOT_USER', 'MODAL_IS_OPEN', 'TABLE_DATA']),
-  //  },
-  //  methods: {
-  //    ...mapActions(['add_card', 'openModal']),
-  //  }
-  //}
+import UserCard from './components/UserCard.vue';
+import {useUserState} from './composables/useUserState.ts';
+//ModalCalculate: () => import('./components/modal/ModalCalculate')
+
+// const VLoader = () => import('./components/preloader/VLoader.vue');
+
+const {getRootUser, addCard, openModal, modalIsOpen, tableData} = useUserState();
+console.log(getRootUser.value, 'root')
+
 </script>
 
 <style lang="scss">
