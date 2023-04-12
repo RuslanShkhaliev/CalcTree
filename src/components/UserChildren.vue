@@ -7,7 +7,7 @@
                 class="card-list__item"
             >
                 <UserCard :card="card" />
-            </li>
+            </li> 
         </ul>
     </div>
 
@@ -17,14 +17,12 @@
     lang="ts"
     setup
 >
+import {UserEntity} from '../models/user.entity';
 import UserCard from './UserCard.vue';
 
-const props = defineProps({
-    cardList: {
-        type: Array,
-        default: () => [],
-    },
-});
+const props = defineProps<{
+    cardList: UserEntity[]
+}>();
 console.log(props.cardList);
 
 </script>

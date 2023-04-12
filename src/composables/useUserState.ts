@@ -1,11 +1,11 @@
 import {computed, reactive} from 'vue';
 import table from '../FAKE/table.json';
-import {UserEntity} from '../models/userEntity';
+import {UserEntity} from '../models/user.entity';
 
 
 export const useUserState = () => {
     const state = reactive<any>({
-        user: new UserEntity(1, true),
+        counter: 0,
         cacheCard: null,
         tooltipComponent: null,
         tooltipIsShow: false,
@@ -15,6 +15,7 @@ export const useUserState = () => {
     });
 
     // GETTERS
+    const counter = computed(() => ++state.counter)
     const tooltipIsShow = computed(() => state.tooltipIsShow)
     const getRootUser = computed(() => state.user)
     const tableData = computed(() => state.tableData)
@@ -22,6 +23,7 @@ export const useUserState = () => {
     const tooltipIsOpen = computed(() => state.cacheCard?.tooltip?.isOpen)
 
     // ACTIONS
+
     const closeModal = () => {
         state.modalIsOpen = false
         state.tableData = null
@@ -40,7 +42,7 @@ export const useUserState = () => {
             state.userCounter++;
             let data = {
                 id: `partner-${state.userCounter}`,
-                parentName: card.firstName,
+                parentName: card.name,
                 firstName: 'partner-',
                 lastName: `${state.userCounter}`,
                 groupVolume: 0,
@@ -102,6 +104,7 @@ export const useUserState = () => {
 
 
     return {
+        counter,
         tooltipIsOpen,
         tooltipIsShow,
         getRootUser,
@@ -145,7 +148,7 @@ export const useUserState = () => {
 //      Vue.set(state, "user", {
 //        root: true,
 //        id: `Vasya-${state.id}`,
-//        firstName: "Vasya",
+//        name: "Vasya",
 //        lastName: "Pupkin",
 //        groupVolume: 0,
 //        groupVolumeProgressBar: 0,

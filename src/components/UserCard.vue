@@ -6,26 +6,26 @@
         <div
             class="user-container"
             ref="container"
-            :class="{root: card.root}"
+            :class="{root: card.isRoot}"
         >
             <div
-                :class="['user-card', {'tree-line-to': hasChildren}]"
+                :class="['user-card', {'tree-line-to': card.hasPartners}]"
                 tabindex="0"
             >
                 <div class="user-card__inner">
                     <div
                         class="user-card__body"
-                        @mouseover="tooltipInfoOpen"
-                        @mouseleave="tooltipInfoClose"
+                        @mouseenter="showTooltipInfo = true"
+                        @mouseleave="showTooltipInfo = false"
                     >
                         <div class="user-card__top">
                             <span class="user-card__top-name">
-                                {{ fullName }}
+                                {{ card.name }}
                             </span>
                         </div>
                         <div class="user-card__line">
-                            <span :title="card.l_amount">
-                                ЛО: {{ card.l_amount }}
+                            <span :title="card.personalVolume">
+                                ЛО: {{ card.personalVolume }}
                             </span>
                             <span :title="card.groupVolume">
                                 ГО: {{ card.groupVolume }}
@@ -39,35 +39,51 @@
                     <button
                         class="user-card__btn user-card__btn-add"
                         v-if="!createDisabled"
-                        @click="createCard(card)"
+                        @click="createCard"
                     >
                         <Icon src="list" />
                     </button>
                     <Transition name="appear">
                         <button
                             class="user-card__btn user-card__btn-menu"
-                            v-if="!removingIsActive"
-                            @click="tooltipRemoveOpen"
+                            @click.stop="showTooltipSettings =
+                            !showTooltipSettings"
                         >
                             <Icon src="menu"/>
                         </button>
                     </Transition>
                 </div>
-                <Transition
-                    name="tooltip-appear"
-                    mode="out-in"
-                >
-                    <CardTooltip
-                        v-if="tooltipIsOpened"
-                        :tooltipProps="tooltipProps"
-                    />
-                </Transition>
+
+                    <div class="tooltip-wrapper">
+                        <div class="tooltip-inner">
+                            <TransitionGroup
+                                name="tooltip-appear"
+                                mode="out-in"
+                            >
+                                    <TooltipInfo
+                                        v-if="canShowInfo"
+                                        :group-volume="card.groupVolume"
+                                        :name="card.name"
+                                        :partners="card.partners.length"
+                                        :personal-volume="card.personalVolume"
+                                    />
+                                    <TooltipSettings
+                                        v-if="showTooltipSettings"
+                                        :card="card"
+                                        @set-volume="setVolume"
+                                        @remove-branches="removePartners"
+                                        @remove-partner="removePartner"
+                                        @remove-partner-with-save="removePartnerWithSave"
+                                        @close="showTooltipSettings = false"
+                                    />
+                            </TransitionGroup>
+                        </div>
+                    </div>
             </div>
             <Transition name="child-appear">
                 <UserChildren
                     ref="children"
-                    v-if="hasChildren"
-                    :card-list="cardList"
+                    :card-list="card.partners"
                 />
             </Transition>
         </div>
@@ -79,83 +95,66 @@
     lang="ts"
     setup
 >
-import {computed, ref} from 'vue';
-import {useUserState} from '../composables/useUserState';
-import CardTooltip from './tooltip/CardTooltip.vue';
+import {computed, inject, Ref, ref} from 'vue';
+import {UserEntity} from '../models/user.entity';
+import TooltipInfo from './tooltip/TooltipInfo.vue';
+import TooltipSettings from './tooltip/TooltipSettings.vue';
 import Icon from './UI/Icon.vue';
 import UserChildren from './UserChildren.vue'; // const CardTooltip = () => import('./tooltip/CardTooltip.vue');
 // const CardTooltip = () => import('./tooltip/CardTooltip.vue');
 
-const props = defineProps({
-    card: {
-        type: Object,
-        require: true,
-    },
-});
+const props = defineProps<{card: UserEntity}>()
 
-const btnIsVisible = ref(true);
-const tooltipComponent = ref(null);
+const showTooltipInfo = ref(false)
+const showTooltipSettings = ref(false)
+
+const canShowInfo = computed(() => showTooltipInfo.value &&
+    !showTooltipSettings.value)
+
 console.log(props.card.id, 'props.card.id');
 // COMPUTED
-const fullName = computed(() =>
-    `${props.card.firstName} ${props.card.lastName}`);
-const hasChildren = computed(() => props.card?.list.length);
 
-const tooltipProps = computed(() => {
-    if (tooltipIsOpened.value) {
-        return {
-            component: tooltipComponent.value,
-            cardData: props.card,
-        };
-    }
-    return null;
-});
-const tooltipIsOpened = computed(() => {
-    return props.card.tooltip.isOpen;
-});
-const removingIsActive = computed(() => {
-    return tooltipIsOpened.value && tooltipComponent.value === props.card.tooltip.removing;
-});
-const createDisabled = computed(() => {
-    return props.card.list.length >= props.card.countOfChildren;
-});
-const cardList = computed(() => props.card.list);
+
+const createDisabled = computed(() => props.card.partners.length >= 8);
 // METHODS
-const {
-    tooltipIsShow,
-    tooltipIsOpen,
-    addCard,
-    openTooltip,
-    closeTooltipCache,
-} = useUserState();
 
-const createCard = (card) => {
-    console.log(card, 'parent');
-    addCard(card);
-};
-const tooltipClose = () => {
-    if (tooltipIsOpen.value) {
-        closeTooltipCache();
-        props.card.tooltip.isOpen = false;
+const counter = inject('counter') as Ref<number>
+
+const createCard = () => {
+    try {
+        props.card.addPartner(
+            new UserEntity({
+                id: ++counter.value,
+                name: `Partner-${counter.value}`,
+                parent: props.card
+            })
+        )
+    } catch (e) {
+        alert(e.message)
     }
 };
-const tooltipInfoClose = () => {
-    if (removingIsActive.value) {
-        return;
+
+
+const setVolume = (volume) => {
+    try {
+        props.card.setVolume(volume)
+    } catch (e) {
+        alert(e.message)
     }
-    props.card.tooltip.isOpen = false;
-};
-const tooltipInfoOpen = () => {
-    if (removingIsActive.value) {
-        return;
-    }
-    tooltipComponent.value = props.card.tooltip.info;
-    props.card.tooltip.isOpen = true;
-};
-const tooltipRemoveOpen = () => {
-    openTooltip(props.card);
-    tooltipComponent.value = props.card.tooltip.removing;
-};
+}
+
+const removePartners = () => {
+    props.card.removePartners()
+}
+const removePartner = () => {
+    console.log('remove-partner')
+    props.card.removePartner()
+}
+
+const removePartnerWithSave = () => {
+    props.card.removePartnerWithSave()
+}
+
 
 </script>
 
@@ -322,6 +321,36 @@ const tooltipRemoveOpen = () => {
 
 .tree-line-to:after {
     animation: lazyAppear .6s forwards ease;
+}
+
+.tooltip-wrapper {
+    position: absolute;
+    left: 0;
+    bottom: 100%;
+    z-index: 1000;
+    width: auto;
+    margin-bottom: 10px;
+    /*box-shadow: 0 4px 8px rgba(0, 0, 0, .1);*/
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .1);
+
+    &:before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        bottom: 0;
+        left: 0;
+        transform: translate(16px, 48%) rotate(45deg);
+        width: 10px;
+        height: 10px;
+        border-radius: 16%;
+        background: #fff;
+    }
+}
+
+.tooltip-inner {
+    background: #fff;
+    border-radius: 5px;
+    overflow: hidden;
 }
 
 </style>

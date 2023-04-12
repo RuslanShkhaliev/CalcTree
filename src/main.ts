@@ -1,12 +1,15 @@
-import {createApp} from 'vue'
-import App from './App.vue'
-import {createPinia} from 'pinia'
 //import store from './store'
+import vClickOutside from 'click-outside-vue3';
+import {createPinia} from 'pinia';
+import {createApp} from 'vue';
+import App from './App.vue';
 
 const store = createPinia();
 const app = createApp(App)
 
 app.use(store)
+app.use(vClickOutside)
+
 
 app.mount('#app')
 

@@ -1,7 +1,9 @@
 <template>
     <div
+        ref="tooltip"
         class="tooltip-remove"
         tabindex="-1"
+        v-click-outside="closeTooltip"
     >
         <button
             class="tooltip-remove__close"
@@ -13,12 +15,12 @@
         <div class="tooltip-remove__body">
             <div v-if="!editing">
                 <div
-                    v-if="card.list.length"
+                    v-if="card.partners.length"
                     class="tooltip-remove__row"
                 >
                     <div
                         class="tooltip-remove__label"
-                        @click.once="deleteChildren"
+                        @click.once="removeBranches"
                     >
                           <span class="tooltip-remove__icon">
                             <Icon src="remove" />
@@ -27,12 +29,26 @@
                     </div>
                 </div>
                 <div
+                    v-if="card.partners.length"
                     class="tooltip-remove__row"
-                    v-if="!card.root"
                 >
                     <div
                         class="tooltip-remove__label"
-                        @click.once="deleteCardWithChildren"
+                        @click.once="removeAndSavePartners"
+                    >
+                          <span class="tooltip-remove__icon">
+                            <Icon src="remove" />
+                          </span>
+                        <span>Удалить партнера с сохранением</span>
+                    </div>
+                </div>
+                <div
+                    class="tooltip-remove__row"
+                    v-if="!card.isRoot"
+                >
+                    <div
+                        class="tooltip-remove__label"
+                        @click="removePartner"
                     >
                           <span class="tooltip-remove__icon">
                             <Icon src="layer-1" />
@@ -87,81 +103,67 @@
     setup
     lang="ts"
 >
-import {computed, onMounted, onUnmounted, ref} from 'vue';
-import {useUserState} from '../../composables/useUserState';
+import {computed, ref} from 'vue';
+import {UserEntity} from '../../models/user.entity';
 import Icon from '../UI/Icon.vue';
 
-const props = defineProps({
-    card: Object,
-});
+const props = defineProps<{
+    card: UserEntity
+}>()
 
+const emits = defineEmits(['close', 'remove-partner', 'remove-branches',
+                           'remove-partner-with-save'])
 
 const removeCard = ref('children-tree');
 const open = ref(true);
-const tooltipDeleted = ref(false);
+const tooltip = ref(null);
 const editing = ref(false);
 const selfVolume = ref(0);
-
-const {tooltipIsOpen, tooltipIsShow, closeTooltipCache} = useUserState();
 
 const selfVolumeParsed =
     computed(() =>
         selfVolume.value ? parseInt(selfVolume.value + '', 10) : 0);
 
+
 const closeTooltip = () => {
-    tooltipDeleted.value = true;
-    closeTooltipCache();
+    console.log('close tooltip')
+    emits('close')
 }
 
 const closeByKeypress = (e) => {
-    if (props.card.tooltip.isOpen && e.key === 'Escape') {
-        closeTooltip();
+    if (e.key === 'Escape') {
+        closeTooltip()
     }
 };
 
 const savePersonalVolume = () => {
-    if (props.card.root && selfVolumeParsed.value <= 70) {
-        return props.card.l_amount = 70;
-    }
-    props.card.l_amount = selfVolumeParsed.value;
+    emits('set-volume', selfVolumeParsed.value)
     editing.value = false;
-    closeTooltip();
+}
+
+const removeAndSavePartners = () => {
+    emits('remove-partner-with-save')
 }
 
 const focusOut = (e) => {
     if (e.currentTarget.contains(e.target) && !e.target.classList.contains('user-card__btn')) {
         savePersonalVolume();
-        closeTooltipCache();
+        closeTooltip();
         return false;
     }
 }
 
-const deleteChildren = () => {
-    props.card.list = props.card.list.slice(0, 0);
-    closeTooltip();
+const removeBranches = () => {
+    emits('remove-branches')
 }
 
-const deleteCardWithChildren = () => {
-    let parentChildren = props.card.parentCard.list;
-    let elemIndex = parentChildren.indexOf(this.card);
-
-    closeTooltip()
-    parentChildren.splice(elemIndex, 1);
+const removePartner = () => {
+    emits('remove-partner')
 }
 
 const editPersonalVolume = () => {
     editing.value = true;
 }
-
-
-onMounted(() => {
-    selfVolume.value = props.card.l_amount ?? 0;
-    document.body.addEventListener('keydown', closeByKeypress);
-});
-
-onUnmounted(() => {
-        document.body.removeEventListener('keydown', closeByKeypress);
-})
 </script>
 
 <style lang="scss">
@@ -189,7 +191,7 @@ onUnmounted(() => {
 
     &__close {
         position: absolute;
-        z-index: 10;
+        z-index: 1000;
         top: 2px;
         right: 2px;
         display: flex;

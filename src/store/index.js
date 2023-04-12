@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia';
-import table from '../FAKE/table.json'
+import table from '../FAKE/table.json';
 
 export const useUserStore = defineStore('user', {
    state: () => ({
@@ -145,7 +145,7 @@ export const useUserStore = defineStore('user', {
 //      Vue.set(state, "user", {
 //        root: true,
 //        id: `Vasya-${state.id}`,
-//        firstName: "Vasya",
+//        name: "Vasya",
 //        lastName: "Pupkin",
 //        groupVolume: 0,
 //        groupVolumeProgressBar: 0,
