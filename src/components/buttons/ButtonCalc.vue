@@ -1,20 +1,13 @@
 <template>
   <div>
-    <button class="btn-calculate"
-            @click="$emit('click', $event)"
+    <button
+        class="btn-calculate"
+        @click="$emit('click', $event)"
     >
       <slot></slot>
     </button>
   </div>
 </template>
-
-<script>
-  export default {
-    props: {
-
-    }
-  }
-</script>
 
 <style lang="scss">
   .btn-calculate {
