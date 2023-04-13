@@ -33,7 +33,9 @@
                             <span :title="0">Ранг: R</span>
                         </div>
                         <div class="structure__table-about-progress progress">
-                            <div class="structure__table-about-progress-inner"></div>
+                            <div class="structure__table-about-progress-inner"
+                                 :style="{width: progressBar}"
+                            ></div>
                         </div>
                     </div>
                     <button
@@ -66,6 +68,7 @@
                                         :name="card.name"
                                         :partners="card.partners.length"
                                         :personal-volume="card.personalVolume"
+                                        :allocate="progressBar"
                                     />
                                     <TooltipSettings
                                         v-if="showTooltipSettings"
@@ -120,6 +123,8 @@ const createDisabled = computed(() => props.card.partners.length >= 8);
 
 const counter = inject('counter') as Ref<number>
 
+const progressBar = computed(() => props.card.allocate + '%')
+
 const createCard = () => {
     try {
         props.card.addPartner(
@@ -133,6 +138,7 @@ const createCard = () => {
         alert(e.message)
     }
 };
+
 
 
 const setVolume = (volume) => {
@@ -313,8 +319,10 @@ const removePartnerWithSave = () => {
     border-radius: 5px;
     height: 4px;
     width: calc(100% - 24px);
+    overflow: hidden;
 
     &-inner {
+        height: 100%;
         background: #738bd9;
     }
 }

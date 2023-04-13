@@ -68,6 +68,11 @@ export class UserEntity {
         return this._partners
     }
 
+    public get allocate() {
+        return !this.parent ? 100
+               : +(this.groupVolume / this.parent!.groupVolume * 100).toFixed(2)
+    }
+
     public get hasPartners() {
         return this._partners.length > 0;
     }

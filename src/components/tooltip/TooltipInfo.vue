@@ -9,6 +9,7 @@
       <span>Ранг: R</span>
       <span>ГО ПЕРС.: {{groupVolume}}</span>
       <span>Кол-во менеджеров: {{partners}}</span>
+      <span>Аллокация: {{allocate}}</span>
     </div>
   </div>
 </template>
@@ -20,6 +21,7 @@ defineProps<{
     groupVolume: number
     partners: number | string
     name: string
+    allocate: string
 }>()
 </script>
 

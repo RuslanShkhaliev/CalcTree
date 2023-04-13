@@ -10,7 +10,7 @@
             @click="closeTooltip"
         ></button>
         <div class="tooltip-remove__header">
-            <span>{{ !editing ? 'Форматирование' : 'Личный Объем' }}</span>
+            <span>{{ !editing ? 'Управление' : 'Личный Объем' }}</span>
         </div>
         <div class="tooltip-remove__body">
             <div v-if="!editing">
@@ -63,8 +63,7 @@
                         v-if="!editing"
                     >
                           <span class="tooltip-remove__icon">
-
-                              <Icon src="capa-1" />
+                              <Icon src="edit" />
                           </span>
                         <span>Редактировать личный объем</span>
                     </div>
@@ -80,7 +79,7 @@
                     v-model.number="selfVolume"
                     placeholder="Введите значение"
                     @keypress.enter="savePersonalVolume"
-                    maxlength="5"
+                    maxlength="2"
                 >
                 <div class="tooltip-remove__edit__btn-group">
                     <button
@@ -103,7 +102,7 @@
     setup
     lang="ts"
 >
-import {computed, ref} from 'vue';
+import {computed, onMounted, onUnmounted, ref} from 'vue';
 import {UserEntity} from '../../models/user.entity';
 import Icon from '../UI/Icon.vue';
 
@@ -111,14 +110,16 @@ const props = defineProps<{
     card: UserEntity
 }>()
 
-const emits = defineEmits(['close', 'remove-partner', 'remove-branches',
-                           'remove-partner-with-save'])
+const emits = defineEmits([
+    'close',
+    'remove-partner',
+    'remove-branches',
+    'remove-partner-with-save'
+])
 
-const removeCard = ref('children-tree');
-const open = ref(true);
 const tooltip = ref(null);
 const editing = ref(false);
-const selfVolume = ref(0);
+const selfVolume = ref(props.card.personalVolume);
 
 const selfVolumeParsed =
     computed(() =>
@@ -130,11 +131,21 @@ const closeTooltip = () => {
     emits('close')
 }
 
+
 const closeByKeypress = (e) => {
     if (e.key === 'Escape') {
         closeTooltip()
     }
 };
+onMounted(() => {
+    document.addEventListener('keydown', closeByKeypress)
+})
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', closeByKeypress)
+})
+
+
 
 const savePersonalVolume = () => {
     emits('set-volume', selfVolumeParsed.value)
