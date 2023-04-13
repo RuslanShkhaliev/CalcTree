@@ -1,5 +1,9 @@
 <template>
-    <div>
+
+    <panZoom
+        selector=".inner-wrap"
+        :options="{minZoom: 0.5, maxZoom: 5}"
+    >
         <div class="wrapper">
             <div class="inner-wrap">
                 <UserCard :card="root" />
@@ -13,7 +17,7 @@
             <!--      <modal-calculate v-if="MODAL_IS_OPEN && TABLE_DATA"/>
                   <v-loader v-else-if="MODAL_IS_OPEN && !TABLE_DATA"></v-loader>-->
         </div>
-    </div>
+    </panZoom>
 </template>
 
 <script
@@ -27,8 +31,8 @@ import {UserEntity} from './models/user.entity';
 
 // const VLoader = () => import('./components/preloader/VLoader.vue');
 
-const counter = ref(0)
-provide('counter', counter)
+const counter = ref(0);
+provide('counter', counter);
 
 const root = ref(
     new UserEntity({
@@ -44,25 +48,18 @@ const root = ref(
 <style lang="scss">
 @import "./assets/style/main.scss";
 
-html, body {
-    min-height: 100%;
-}
-
-body {
-    font-family: Helvetica, sans-serif;
-    font-size: 16px;
-    line-height: 1.2;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
 
 .wrapper {
     position: relative;
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
     background: #fff;
-    display: flex;
-    align-items: center;
+    overflow: hidden;
+}
+
+.inner-wrap {
+    padding: 20px;
 }
 
 .btn-calculate {
@@ -74,25 +71,4 @@ body {
     font-size: 18px;
     background: #FFC200;
 }
-
-.inner-wrap {
-    padding: 20px;
-
-    margin: 0 auto;
-}
-
-.user-wrapper {
-    display: flex;
-}
-
-/*.btn-calculate {*/
-/*  position: fixed;*/
-/*  top: 10px;*/
-/*  right: 40px;*/
-/*  padding: 20px 40px;*/
-/*  background: #ffc107;*/
-/*  font-size: 18px;*/
-/*  font-weight: 600;*/
-/*  z-index: 1000;*/
-/*}*/
 </style>

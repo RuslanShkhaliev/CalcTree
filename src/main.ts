@@ -1,7 +1,9 @@
-//import store from './store'
+//@ts-ignore
 import vClickOutside from 'click-outside-vue3';
 import {createPinia} from 'pinia';
 import {createApp} from 'vue';
+//@ts-ignore
+import panZoom from 'vue-panzoom';
 import App from './App.vue';
 
 const store = createPinia();
@@ -9,6 +11,7 @@ const app = createApp(App)
 
 app.use(store)
 app.use(vClickOutside)
+app.use(panZoom)
 
 
 app.mount('#app')

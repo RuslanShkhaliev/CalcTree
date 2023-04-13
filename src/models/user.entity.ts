@@ -70,7 +70,7 @@ export class UserEntity {
 
     public get allocate() {
         return !this.parent ? 100
-               : +(this.groupVolume / this.parent!.groupVolume * 100).toFixed(2)
+               : +(this.groupVolume / (this.parent!.groupVolume - this.parent.personalVolume) * 100).toFixed(2)
     }
 
     public get hasPartners() {
