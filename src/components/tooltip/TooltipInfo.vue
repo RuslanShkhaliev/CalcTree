@@ -1,25 +1,28 @@
 <template>
   <div class="tooltip-card">
     <div class="tooltip-card__body">
-        <span class="tooltip-card__name">
-      {{card.firstName}} {{card.lastName}}
+      <span class="tooltip-card__name">
+        {{name}}
       </span>
-      <span>ЛО: {{card.l_amount}}</span>
-      <span>ГО: {{card.groupVolume}}</span>
+      <span>ЛО: {{personalVolume}}</span>
+      <span>ГО: {{groupVolume}}</span>
       <span>Ранг: R</span>
-      <span>ГО ПЕРС.: {{card.groupVolume}}</span>
-      <span>Кол-во менеджеров: {{card.countOfChildren}}</span>
+      <span>ГО ПЕРС.: {{groupVolume}}</span>
+      <span>Кол-во менеджеров: {{partners}}</span>
+      <span>Аллокация: {{allocate}}</span>
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 
-  export default {
-    props: {
-      card: Object
-    },
-  }
+defineProps<{
+    personalVolume: number
+    groupVolume: number
+    partners: number | string
+    name: string
+    allocate: string
+}>()
 </script>
 
 <style lang="scss">
